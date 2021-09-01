@@ -14,22 +14,29 @@ const app = express(); //Initializes express application.
 // mongodb+srv://artturobld:*****@clustermongodb.829ur.mongodb.net/test?authSource=admin&replicaSet=atlas-lhmgsr-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true
 
 //Enabling CORS
-app.use(cors())
+app.use(cors());
+
+//Body Read and Parse - Note: This line should be placed before Routes
+app.use(express.json());
 
 //Database
 dbConnection();
 
-    console.log(process.env);
+console.log(process.env);
+    
 //Routes
 // req - Request
 // res - Response
 app.get( '/', (req, res) => {
-    res.status(400).json({
+    res.status(200).json({
         ok:true,
         msg: 'Hello World'
     })
 } );
 
+//Routes
+app.use('/api/users', require('./routes/usersroutes'));
+app.use('/api/login', require('./routes/auth'));
 
 
 //Instruction to specify port which the JS app uses
