@@ -36,6 +36,10 @@ app.get( '/', (req, res) => {
 
 //Routes
 app.use('/api/users', require('./routes/usersroutes'));
+app.use('/api/hospitals', require('./routes/hospitalsroutes'));
+app.use('/api/doctors', require('./routes/doctorsroutes'));
+app.use('/api/search', require('./routes/searchroutes'));
+app.use('/api/upload', require('./routes/uploadsroutes'));
 app.use('/api/login', require('./routes/auth'));
 
 
