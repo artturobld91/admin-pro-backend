@@ -22,6 +22,9 @@ app.use(express.json());
 //Database
 dbConnection();
 
+//Public Directory
+app.use(express.static('public'));
+
 console.log(process.env);
     
 //Routes
