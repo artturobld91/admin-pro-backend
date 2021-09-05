@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { validatefields } = require('../middlewares/validateFields');
-const { login, googleSignIn } = require('../controllers/authcontroller')
+const { login, googleSignIn, renewToken } = require('../controllers/authcontroller');
+const { validateJWT } = require('../middlewares/validate-jwt');
 
 const router = Router();
 
@@ -20,6 +21,11 @@ router.post('/google',
         validatefields
     ],
     googleSignIn 
+)
+
+router.get('/renew', 
+    validateJWT,
+    renewToken 
 )
 
 
