@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { generateJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const { getMenuFrontend } = require('../helpers/menu-frontend');
 
 const login = async(req, res = response ) => {
 
@@ -37,6 +38,7 @@ const login = async(req, res = response ) => {
         res.json({
             ok: true,
             token,
+            menu: getMenuFrontend( userDB.role ),
             msg: 'Login successful'
         })
 
@@ -53,12 +55,16 @@ const googleSignIn = async(req, res = response) => {
 
     const googleToken = req.body.token;
 
+    console.log(googleToken);
+
     try {
 
         const { name, email, picture } = await googleVerify( googleToken );
 
         const userDB = await User.findOne({ email });
         let user;
+
+        console.log(userDB);
 
         if(!userDB){
             user = new User({
@@ -74,6 +80,7 @@ const googleSignIn = async(req, res = response) => {
             //User exists
             user = userDB;
             user.google = true;
+            user.img = picture;
             //user.password = '@@@';
         }
 
@@ -86,6 +93,7 @@ const googleSignIn = async(req, res = response) => {
         res.json({
             ok: true,
             msg: 'Google Signin',
+            menu: getMenuFrontend( user.role ),
             token
         });
 
@@ -98,7 +106,7 @@ const googleSignIn = async(req, res = response) => {
     } catch (error) {
         console.log(error);
         res.status(401).json({
-            ok: true,
+            ok: false,
             msg: 'Google token is not valid'
         });
     }
@@ -112,9 +120,15 @@ const renewToken = async(req, res = response) => {
     // Generate Token JWT
     const token = await generateJWT(uid);
 
+    // Get User by UID
+    const user = await User.findById(uid);
+
     res.json({
         ok: true,
-        token
+        token,
+        user,
+        menu: getMenuFrontend( user.role )
+        
     });
 }
 

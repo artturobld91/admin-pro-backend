@@ -111,8 +111,15 @@ const updateUser = async (req, res = response) => {
         
         //delete fields.password; Not needed because of refactorization const {password, google, ...fields} = req.body;
         //delete fields.google;
+        if(!userDB.google){
+            fields.email = email;
+        } else if(userDB.email !== email){
+            return res.status(400).json({
+                ok: false,
+                msg: 'Google users cannot update their email.'
+            })
+        }
 
-        fields.email = email;
         const updatedUser = await User.findByIdAndUpdate(uid, fields, {new: true});
 
         res.json({
