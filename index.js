@@ -1,5 +1,6 @@
 const express = require('express'); /// Way to do imports in node.
 require('dotenv').config(); //To use environment variables.
+const path = require('path');
 
 const cors = require('cors'); //To enable CORS
 
@@ -44,6 +45,11 @@ app.use('/api/doctors', require('./routes/doctorsroutes'));
 app.use('/api/search', require('./routes/searchroutes'));
 app.use('/api/upload', require('./routes/uploadsroutes'));
 app.use('/api/login', require('./routes/auth'));
+
+//Last Route
+app.get('*', (req, res) => {
+    res.sendFile( path.resolve( __dirname, 'public/index.html') )
+});
 
 
 //Instruction to specify port which the JS app uses
